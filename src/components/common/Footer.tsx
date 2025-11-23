@@ -3,16 +3,31 @@
 import React from 'react';
 import { Home, Video, User } from 'lucide-react';
 
+// FIX: Extend the type definition to include 'syllabus'
+type ViewType = 'home' | 'video' | 'user' | 'syllabus';
+
 interface FooterProps {
-    activeView: 'home' | 'video' | 'user';
-    onChangeView: (view: 'home' | 'video' | 'user') => void;
+    activeView: ViewType;
+    onChangeView: (view: 'home' | 'video' | 'user') => void; // Footer buttons still only output these three actions
 }
 
 const Footer: React.FC<FooterProps> = ({ activeView, onChangeView }) => {
     
+    // We check against the visible tabs ('home', 'video', 'user') for styling, 
+    // even if activeView is 'syllabus'.
+    const getActiveTab = (currentView: ViewType): 'home' | 'video' | 'user' => {
+        if (currentView === 'syllabus') {
+            // When in syllabus view, highlight the Home tab, as that's the "parent" flow.
+            return 'home'; 
+        }
+        return currentView as 'home' | 'video' | 'user';
+    }
+    
+    const activeTab = getActiveTab(activeView);
+
     const iconClass = (view: 'home' | 'video' | 'user') => 
         `flex flex-col items-center p-2 transition-colors duration-200 cursor-pointer ${
-            activeView === view ? 'text-emerald-400' : 'text-gray-400 hover:text-white'
+            activeTab === view ? 'text-emerald-400' : 'text-gray-400 hover:text-white'
         }`;
 
     return (

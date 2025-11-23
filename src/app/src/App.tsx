@@ -6,10 +6,10 @@ import React, { useState, useCallback } from 'react';
 import LoginPage from '../../components/views/LoginPage';
 import SplashScreen from '../../components/views/SplashScreen';
 import DashboardPage from '../../components/views/DashboardPage';
+import { SubscriptionProvider } from '../../context/SubscriptionContext'; 
 
 const App = () => {
     const [currentPage, setCurrentPage] = useState('splash');
-    // Store user data after login (only email for now)
     const [userEmail, setUserEmail] = useState('demo@eduscroll.com'); 
 
     const handlePageChange = useCallback((newPage: string) => {
@@ -27,16 +27,17 @@ const App = () => {
             Content = <SplashScreen onTransitionEnd={handlePageChange} />;
             break;
         case 'login':
-            // Update LoginPage to pass email back on success
             Content = <LoginPage onLoginSuccess={(page) => handleLoginSuccess(page, 'demo@eduscroll.com')} />; 
             break;
         case 'dashboard':
-            // Pass the required props down: email and logout handler
+            // Wrap DashboardPage in the SubscriptionProvider
             Content = (
-                <DashboardPage 
-                    onLogout={() => handlePageChange('login')} 
-                    userEmail={userEmail}
-                />
+                <SubscriptionProvider>
+                    <DashboardPage 
+                        onLogout={() => handlePageChange('login')} 
+                        userEmail={userEmail}
+                    />
+                </SubscriptionProvider>
             );
             break;
         default:
@@ -44,7 +45,9 @@ const App = () => {
     }
 
     return (
-        <div className="font-sans antialiased min-h-screen">
+        // FIX: Ensure the root container takes up full screen width (w-full)
+        // If your original code had something like 'max-w-xl mx-auto' here, remove it.
+        <div className="font-sans antialiased min-h-screen w-full"> 
             <style global jsx>{`
                 /* Override Next.js default body styling to enable the full-screen reel experience */
                 body { 

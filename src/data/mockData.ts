@@ -1,4 +1,4 @@
-import { MOCK_COMMENTS as BaseComments } from '../components/modals/CommentModal';
+// src/data/mockData.ts
 
 // Type definition for reel data
 export interface Reel {
@@ -10,29 +10,42 @@ export interface Reel {
     saved: number;
     videoUrl: string;
     description: string;
+    // New fields for the "Continue Learning" CTA
+    externalLink?: string; 
+    externalLinkText?: string;
 }
 
-// Reel Data
+// Reel Data - Focuses ONLY on TECH subjects
 export const MOCK_REELS: Reel[] = [
     { 
-        id: 1, 
-        title: "Quantum Mechanics: The Double Slit", 
-        creator: "Dr. Physics", 
-        subject: "Science", 
-        likes: 1200, 
-        saved: 450,
-        videoUrl: "https://placehold.co/1080x1920/10B981/ffffff?text=Video%201%0AQuantum%20Mechanics", // Placeholder video frame
-        description: "A quick, visual breakdown of the most mind-bending experiment in science."
+        id: 5, 
+        title: "Learn about OOPs", 
+        creator: "Code Master", 
+        subject: "Tech", 
+        likes: 500, 
+        saved: 150,
+        videoUrl: "https://placehold.co/1080x1920/334155/ffffff?text=Video%201%0ALearn+about+OOPs", 
+        description: "Introduction to Object-Oriented Programming principles and fundamental syntax."
     },
     { 
-        id: 2, 
-        title: "Understanding the Golden Ratio in Art", 
-        creator: "Art History Hub", 
-        subject: "Art", 
-        likes: 850, 
-        saved: 210,
-        videoUrl: "https://placehold.co/1080x1920/059669/ffffff?text=Video%202%0AGolden%20Ratio", // Placeholder video frame
-        description: "From Da Vinci to modern design, discover the divine proportion."
+        id: 8, 
+        title: "Prerequistic before you start coding", 
+        creator: "Code Master", 
+        subject: "Tech", 
+        likes: 1200, 
+        saved: 350,
+        videoUrl: "https://placehold.co/1080x1920/474747/ffffff?text=Video%202%0APrereqs", 
+        description: "Essential tools, mindset, and basic concepts you need before writing your first line of code."
+    },
+    { 
+        id: 9, // NEW COURSE ID
+        title: "Basic of Git", // NEW COURSE TITLE
+        creator: "Dev Ops Guy", 
+        subject: "Tech", 
+        likes: 1500, 
+        saved: 600,
+        videoUrl: "https://placehold.co/1080x1920/6495ED/ffffff?text=Video%203%0AGit+Basics", 
+        description: "Master the fundamental commands and workflow of Git for version control."
     },
     { 
         id: 3, 
@@ -41,23 +54,32 @@ export const MOCK_REELS: Reel[] = [
         subject: "Tech", 
         likes: 3400, 
         saved: 1100,
-        videoUrl: "https://placehold.co/1080x1920/047857/ffffff?text=Video%203%0APython%20Lists", // Placeholder video frame
+        videoUrl: "https://placehold.co/1080x1920/047857/ffffff?text=Video%204%0APython%20Lists", 
         description: "Write cleaner, faster Python code with this powerful trick."
     },
     { 
-        id: 4, 
-        title: "The Roman Republic's Collapse", 
-        creator: "History Buff", 
-        subject: "History", 
-        likes: 920, 
-        saved: 300,
-        videoUrl: "https://placehold.co/1080x1920/155E75/ffffff?text=Video%204%0ARoman%20History", // Placeholder video frame
-        description: "Analyzing the political and economic factors that doomed the Republic."
+        id: 6, 
+        title: "Understanding Asynchronous JavaScript", 
+        creator: "Web Dev Expert", 
+        subject: "Tech", 
+        likes: 2100, 
+        saved: 780,
+        videoUrl: "https://placehold.co/1080x1920/475569/ffffff?text=Video%205%0AAsync+JS", 
+        description: "Promises, async/await, and why they matter for modern web apps."
+    },
+    { 
+        id: 7, 
+        title: "Git Basics: Commit and Branching", 
+        creator: "Dev Ops Guy", 
+        subject: "Tech", 
+        likes: 980, 
+        saved: 400,
+        videoUrl: "https://placehold.co/1080x1920/64748B/ffffff?text=Video%206%0AGit+Basics", 
+        description: "Master the fundamentals of version control for collaborative projects."
     },
 ];
 
-// Mock Comment Data (Moved to CommentModal's internal state initialization 
-// to avoid circular dependency in this structure. Keeping the type here.)
+// Type definition for comment data
 export interface Comment {
     id: number | string;
     user: string;
@@ -69,16 +91,105 @@ export type MockCommentsType = {
     [key: number]: Comment[];
 }
 
-export const MOCK_COMMENTS: MockCommentsType = {
-    1: [ 
-        { id: 101, user: "ScienceFan99", text: "This explained wave-particle duality better than my professor!", time: "2h ago" },
+// --- QUIZ DATA ---
+
+export interface Quiz {
+    question: string;
+    options: string[];
+    correctAnswerIndex: number;
+}
+
+export const MOCK_QUIZZES: { [key: number]: Quiz } = {
+    // Quiz for the OOPs course (ID 5)
+    5: {
+        question: "Which of the following is NOT a fundamental principle of OOP?",
+        options: [
+            "Encapsulation",
+            "Polymorphism",
+            "Inheritance",
+            "Normalization" 
+        ],
+        correctAnswerIndex: 3,
+    },
+    // Quiz for Prerequisite course (ID 8)
+    8: {
+        question: "Which tool is used for tracking changes in software development?",
+        options: [
+            "IDE",
+            "Git", 
+            "Compiler",
+            "Operating System"
+        ],
+        correctAnswerIndex: 1,
+    },
+    // NEW Quiz for Git Basics course (ID 9)
+    9: {
+        question: "What command saves changes to the local repository history?",
+        options: [
+            "git push",
+            "git pull",
+            "git commit", // Correct Answer
+            "git branch"
+        ],
+        correctAnswerIndex: 2,
+    },
+    // Quiz for Python Lists (ID 3)
+    3: {
+        question: "List comprehension in Python returns what type of object?",
+        options: [
+            "A dictionary",
+            "A tuple",
+            "A list", 
+            "A generator"
+        ],
+        correctAnswerIndex: 2,
+    },
+};
+
+// --- SYLLABUS DATA ---
+
+export interface SyllabusItem {
+    title: string;
+    duration: string;
+    completed: boolean;
+    reelId: number;
+}
+
+export const MOCK_SYLLABUS: { [key: number]: SyllabusItem[] } = {
+    5: [ // Learn about OOPs (ID 5)
+        { title: "Intro to Objects & Classes", duration: "60 sec", completed: true, reelId: 501 },
+        { title: "What is Encapsulation?", duration: "60 sec", completed: false, reelId: 502 },
+        { title: "Inheritance Fundamentals", duration: "60 sec", completed: false, reelId: 503 },
+        { title: "Polymorphism Explained", duration: "60 sec", completed: false, reelId: 504 },
+        { title: "Abstraction & Interfaces", duration: "60 sec", completed: false, reelId: 505 },
+        { title: "OOPs in Python vs Java", duration: "60 sec", completed: false, reelId: 506 },
+        { title: "Method Overloading vs. Overriding", duration: "60 sec", completed: false, reelId: 507 },
+        { title: "Static vs. Instance Members", duration: "60 sec", completed: false, reelId: 508 },
+        { title: "Quiz: OOPs Principles", duration: "60 sec", completed: false, reelId: 509 },
+        { title: "Final Review & Summary", duration: "60 sec", completed: false, reelId: 510 },
     ],
-    2: [ 
-        { id: 201, user: "ArtLover", text: "Beautifully demonstrated. I never saw the connection in the Mona Lisa before.", time: "4h ago" },
+    8: [ // Prerequistic before you start coding (ID 8)
+        { title: "Why VS Code?", duration: "60 sec", completed: true, reelId: 801 },
+        { title: "Basic Terminal Commands", duration: "60 sec", completed: false, reelId: 802 },
+        { title: "What is a Variable?", duration: "60 sec", completed: false, reelId: 803 },
+        { title: "Algorithms and Logic", duration: "60 sec", completed: false, reelId: 804 },
+        { title: "Version Control (Git)", duration: "60 sec", completed: false, reelId: 805 },
+        { title: "Basic Debugging", duration: "60 sec", completed: false, reelId: 806 },
+        { title: "Understanding Data Types", duration: "60 sec", completed: false, reelId: 807 },
+        { title: "Flowcharts & Pseudocode", duration: "60 sec", completed: false, reelId: 808 },
+        { title: "Quiz: Prereqs", duration: "60 sec", completed: false, reelId: 809 },
+        { title: "Setup Review", duration: "60 sec", completed: false, reelId: 810 },
     ],
-    3: [ 
-        { id: 301, user: "CodeNewbie", text: "Super useful, thanks!", time: "1 day ago" },
-        { id: 302, user: "ProDev", text: "Nice summary. Remember to avoid over-complicating comprehensions!", time: "30m ago" },
+    9: [ // NEW Syllabus for Basic of Git (ID 9)
+        { title: "Git vs GitHub vs GitLab", duration: "60 sec", completed: false, reelId: 901 },
+        { title: "Initializing a Repository", duration: "60 sec", completed: false, reelId: 902 },
+        { title: "The Three States (Working, Staging, Repo)", duration: "60 sec", completed: false, reelId: 903 },
+        { title: "Git Add and Git Commit", duration: "60 sec", completed: false, reelId: 904 },
+        { title: "Creating and Switching Branches", duration: "60 sec", completed: false, reelId: 905 },
+        { title: "Merging Branches (Fast-forward)", duration: "60 sec", completed: false, reelId: 906 },
+        { title: "Git Push and Git Pull", duration: "60 sec", completed: false, reelId: 907 },
+        { title: "Conflict Resolution Basics", duration: "60 sec", completed: false, reelId: 908 },
+        { title: "Quiz: Git Fundamentals", duration: "60 sec", completed: false, reelId: 909 },
+        { title: "Final Project Workflow", duration: "60 sec", completed: false, reelId: 910 },
     ],
-    4: [], 
 };

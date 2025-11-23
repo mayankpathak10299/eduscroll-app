@@ -5,7 +5,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Reel } from '../../data/mockData';
 import ReelCard from './ReelCard';
 
-const ReelFeed: React.FC<{ reels: Reel[], onOpenComments: (id: number) => void }> = ({ reels, onOpenComments }) => {
+const ReelFeed: React.FC<{ reels: Reel[], onOpenComments: (id: number) => void, onVideoEnd: (reelId: number) => void }> = ({ reels, onOpenComments, onVideoEnd }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +31,6 @@ const ReelFeed: React.FC<{ reels: Reel[], onOpenComments: (id: number) => void }
 
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         if (typeof window === 'undefined') return;
-        // Throttle/debounce this in a real app
         const newIndex = Math.round(e.currentTarget.scrollTop / window.innerHeight);
         if (newIndex !== activeIndex) {
             setActiveIndex(newIndex);
@@ -59,9 +58,19 @@ const ReelFeed: React.FC<{ reels: Reel[], onOpenComments: (id: number) => void }
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [activeIndex, totalReels, scrollToReel]);
 
+    const handleReelEnd = useCallback(() => {
+        // Pass the ID of the reel that just ended up to DashboardPage
+        const currentReel = reels[activeIndex];
+        if (currentReel) {
+            onVideoEnd(currentReel.id);
+        }
+    }, [activeIndex, reels, onVideoEnd]);
+
+
     if (reels.length === 0) {
+        // FIX: Ensure placeholder takes full height of the parent container
         return (
-            <div className="w-full h-screen flex items-center justify-center bg-gray-900 text-white">
+            <div className="w-full h-full flex items-center justify-center bg-gray-900 text-white">
                 <p className="text-xl text-gray-400">No reels found.</p>
             </div>
         );
@@ -70,12 +79,18 @@ const ReelFeed: React.FC<{ reels: Reel[], onOpenComments: (id: number) => void }
     return (
         <div 
             ref={containerRef}
-            className="w-full h-screen overflow-y-scroll snap-y snap-mandatory bg-black"
+            // FIX: Changed h-screen to h-full. The scroll area now takes 100% of the calculated parent height.
+            className="w-full h-full overflow-y-scroll snap-y snap-mandatory bg-black" 
             onScroll={handleScroll}
         >
             {reels.map((reel, index) => (
-                <div key={reel.id} id={`reel-${reel.id}`} className="snap-start h-screen">
-                    <ReelCard reel={reel} onOpenComments={onOpenComments} />
+                // FIX: Changed h-screen to h-full. Each reel card fits correctly within the scroll area.
+                <div key={reel.id} id={`reel-${reel.id}`} className="snap-start h-full"> 
+                    <ReelCard 
+                        reel={reel} 
+                        onOpenComments={onOpenComments} 
+                        onVideoEnd={handleReelEnd} 
+                    />
                 </div>
             ))}
             
